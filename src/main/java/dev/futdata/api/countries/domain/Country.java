@@ -49,7 +49,7 @@ public class Country {
         code = code.strip().toUpperCase(Locale.ROOT);
 
         if(name.isBlank()) {
-            throw new InvalidCountryException("Country name cannot be empty");
+            throw new InvalidCountryException("Country name cannot be blank");
         }
 
         if(name.length() > 100) {

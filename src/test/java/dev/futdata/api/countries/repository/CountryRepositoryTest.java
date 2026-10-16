@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 
@@ -44,5 +45,17 @@ public class CountryRepositoryTest {
 
         assertEquals("Brasil", found.getName());
         assertEquals("BR", found.getCode());
+    }
+
+    @Test
+    void shouldRejectDuplicateCountryCode(){
+        Country country = new Country("Brasil", "BR");
+        Country country2 = new Country("Argentina", "BR");
+
+        repository.save(country);
+
+        entityManager.flush();
+
+        assertThrows(DataIntegrityViolationException.class, () -> repository.saveAndFlush(country2));
     }
 }

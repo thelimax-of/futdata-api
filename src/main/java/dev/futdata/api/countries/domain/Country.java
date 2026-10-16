@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -41,12 +40,8 @@ public class Country {
             throw new InvalidCountryException("Country name cannot be null");
         }
 
-        if(code == null) {
-            throw new InvalidCountryException("Country code cannot be null");
-        }
-
         name = name.strip();
-        code = code.strip().toUpperCase(Locale.ROOT);
+
 
         if(name.isBlank()) {
             throw new InvalidCountryException("Country name cannot be blank");
@@ -56,12 +51,7 @@ public class Country {
             throw new InvalidCountryException("Country name cannot be longer than 100 characters");
         }
 
-        if(!code.matches("^[A-Z]{2}$")) {
-            throw new InvalidCountryException("Country code is not valid");
-        }
-
-
         this.name = name;
-        this.code = code;
+        this.code = CountryCode.normalize(code);
     }
 }
